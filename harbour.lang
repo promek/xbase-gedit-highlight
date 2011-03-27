@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Author: ibrahim SEN <promeknet@gmail.com>
+ Copyright (C) 2011 by ibrahim SEN <promeknet@gmail.com>
+                                                                      
+ http://xbase-gedit-highlight.googlecode.com
+                                                                      
+ This program is free software: you can redistribute it and/or modify 
+ it under the terms of the GNU General Public License as published by 
+ the Free Software Foundation, either version 3 of the License, or    
+ (at your option) any later version.                                  
+                                                                      
+ This program is distributed in the hope that it will be useful,      
+ but WITHOUT ANY WARRANTY; without even the implied warranty of       
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
+ GNU General Public License for more details.                         
+                                                                      
+ You should have received a copy of the GNU General Public License    
+ along with this program. If not, see <http://www.gnu.org/licenses/>. 
+
+-->
+<!--
+ README!!!
+
+ cp harbour.lang /usr/share/gtksourceview-2.0/language-specs
+-->
+
+<language id="harbour" _name="Harbour" version="2.0" _section="Sources">
+  <metadata>
+    <property name="mimetypes">text/x-prg;application/x-prg</property>
+    <property name="globs">*.prg</property>
+    <property name="line-comment-start">//</property>
+  </metadata>
+
+  <styles>
+    <style id="comment"             _name="Comment"             map-to="def:comment"/>
+    <style id="string"              _name="String"              map-to="def:string"/>
+    <style id="keyword"             _name="Keyword"             map-to="def:keyword"/>
+    <style id="decimal"             _name="Decimal number"      map-to="def:decimal"/>
+    <style id="boolean"             _name="Boolean value"       map-to="def:boolean"/>
+    <style id="storage-class"       _name="Storage Class"       map-to="def:type"/>
+    <style id="preprocessor"        _name="Preprocessor"        map-to="def:preprocessor"/>
+    <style id="base-n-number"       _name="Arbitrary base number" map-to="def:base-n-integer"/>
+    <style id="real"                _name="Real number"         map-to="def:floating-point"/>
+    <style id="escaped-character"   _name="Escaped Character"   map-to="def:special-char"/>
+    <style id="builtin-function"    _name="Builtin Function"    map-to="def:builtin"/>
+  </styles>
+
+  <default-regex-options case-sensitive="false"/>
+
+  <definitions>
+
+    <context id="line-comment" style-ref="comment" end-at-line-end="true" class="comment" class-disabled="no-spell-check">
+      <start>//</start>
+      <include>
+        <context ref="def:in-line-comment"/>
+      </include>
+    </context>
+
+    <context id="string" style-ref="string" end-at-line-end="true" class="string" class-disabled="no-spell-check">
+      <start>"</start>
+      <end>"</end>
+      <include>
+         <context id="string-esc" style-ref="escaped-character" extend-parent="true">
+            <match>""</match>
+         </context>
+       </include>
+    </context>
+
+    <context id="character-constant" style-ref="string">
+      <match>'.'</match>
+    </context>
+
+    <context id="database-command" style-ref="preprocessor">
+      <keyword>select</keyword>
+      <keyword>sele</keyword>
+      <keyword>replace</keyword>
+      <keyword>repl</keyword>
+      <keyword>index</keyword>
+      <keyword>new</keyword>
+      <keyword>use</keyword>
+      <keyword>with</keyword>
+      <keyword>append blank</keyword>
+      <keyword>go top</keyword>
+      <keyword>skip</keyword>
+      <keyword>delete</keyword>
+      <keyword>pack</keyword>
+      <keyword>seek</keyword>
+      <keyword>found</keyword>
+      <keyword>lastrec</keyword>
+      <keyword>set order to</keyword>
+      <keyword>close all</keyword>
+    </context>
+
+    <context id="keyword" style-ref="keyword">
+      <keyword>for</keyword>
+      <keyword>next</keyword>
+      <keyword>if</keyword>
+      <keyword>else</keyword>
+      <keyword>endif</keyword>
+      <keyword>do</keyword>
+      <keyword>while</keyword>      
+      <keyword>enddo</keyword>                  
+      <keyword>case</keyword>      
+      <keyword>endcase</keyword>            
+    </context>
+
+    <context id="storage-class" style-ref="storage-class">
+      <keyword>function</keyword>
+      <keyword>procedure</keyword>
+      <keyword>parameters</keyword>
+      <keyword>return</keyword>
+      <keyword>include</keyword>
+      <keyword>local</keyword>
+      <keyword>static</keyword>
+      <keyword>private</keyword>
+      <keyword>public</keyword>
+    </context>
+
+
+    <context id="builtin-function" style-ref="builtin-function">
+      <keyword>dispbegin</keyword>
+      <keyword>dispend</keyword>
+      <keyword>setcolor</keyword>
+      <keyword>setcursor</keyword>
+      <keyword>setmode</keyword>
+      <keyword>setcancel</keyword>
+      <keyword>setblink</keyword>
+      <keyword>set scoreboard</keyword>
+      <keyword>set deleted</keyword>
+      <keyword>set wrap</keyword>
+      <keyword>set date to</keyword>
+      <keyword>set epoch to</keyword>
+      <keyword>set default to</keyword>
+    </context>
+
+    <define-regex id="hexnum">[0-9a-f][0-9a-f_]*</define-regex>
+    <define-regex id="exponent">[Ee][+-]?[0-9][0-9_]*</define-regex>
+
+    <context id="based-numeral" style-ref="base-n-number">
+      <match extended="true">
+        (?&lt;![\w\.])
+        [0-9][0-9_]*\#\%{hexnum}(\.\%{hexnum})?\#\%{exponent}?
+        (?![\w\.])
+      </match>
+    </context>
+
+    <context id="real" style-ref="real">
+      <match extended="true">
+        (?&lt;![\w\.])
+        [0-9][0-9_]*\.[0-9][0-9_]*\%{exponent}?
+        (?![\w\.])
+      </match>
+    </context>
+
+    <context id="number" style-ref="decimal">
+      <match extended="true">
+        (?&lt;![\w\.])
+        [0-9][0-9_]*(E[+]?[0-9][0-9_]*)?
+        (?![\w\.])
+      </match>
+    </context>
+
+    <context id="boolean" style-ref="boolean">
+      <keyword>true</keyword>
+      <keyword>false</keyword>
+    </context>
+
+    <context id="harbour" class="no-spell-check">
+      <include>
+        <context ref="line-comment"/>
+        <context ref="string"/>
+        <context ref="character-constant"/>
+        <context ref="database-command"/>
+        <context ref="keyword"/>
+        <context ref="storage-class"/>
+        <context ref="builtin-function"/>
+        <context ref="based-numeral"/>
+        <context ref="real"/>
+        <context ref="number"/>
+        <context ref="boolean"/>
+      </include>
+    </context>
+
+  </definitions>
+</language>
+
