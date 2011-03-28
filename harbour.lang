@@ -30,6 +30,8 @@
     <property name="mimetypes">text/x-prg;application/x-prg</property>
     <property name="globs">*.prg</property>
     <property name="line-comment-start">//</property>
+    <property name="block-comment-start">/*</property>
+    <property name="block-comment-end">*/</property>
   </metadata>
 
   <styles>
@@ -50,12 +52,30 @@
 
   <definitions>
 
+
     <context id="line-comment" style-ref="comment" end-at-line-end="true" class="comment" class-disabled="no-spell-check">
       <start>//</start>
       <include>
         <context ref="def:in-line-comment"/>
       </include>
     </context>
+
+    <context id="start-comment" style-ref="comment" class="comment" class-disabled="no-spell-check">
+      <start>/\*</start>
+      <end>\*/</end>
+      <include>
+         <context ref="def:in-comment"/>
+      </include>
+    </context>
+
+    <context id="end-comment" style-ref="error">
+      <match>\*/(?!\*)</match>
+    </context>
+
+
+
+
+
 
     <context id="string" style-ref="string" end-at-line-end="true" class="string" class-disabled="no-spell-check">
       <start>"</start>
@@ -169,6 +189,8 @@
     <context id="harbour" class="no-spell-check">
       <include>
         <context ref="line-comment"/>
+        <context ref="start-comment"/>
+        <context ref="end-comment"/>
         <context ref="string"/>
         <context ref="character-constant"/>
         <context ref="database-command"/>
